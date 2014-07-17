@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 /**
@@ -18,6 +19,8 @@ public class VolleyNetwork {
 
     private RequestQueue queue;
 
+    private ImageLoader mImageLoader;
+
     public static synchronized void init(Context context) {
         instance = new VolleyNetwork(context);
     }
@@ -28,6 +31,7 @@ public class VolleyNetwork {
 
     private VolleyNetwork(Context context) {
         queue = Volley.newRequestQueue(context);
+        mImageLoader = new ImageLoader(queue, new LruBitmapCache(context));
     }
 
     public <T> void addToRequestQueue(Request<T> req) {
@@ -40,5 +44,9 @@ public class VolleyNetwork {
         if (queue != null) {
             queue.cancelAll(tag);
         }
+    }
+
+    public ImageLoader getImageLoader() {
+        return mImageLoader;
     }
 }
